@@ -4,9 +4,11 @@ var app            = express();
 var mongoose       = require('mongoose');
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
-var db_mongoose    = mongoose.connection;
+var mongojs		   = require('mongojs');
 
 // configuration ===========================================
+app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.json());
 	
 // config files
 var db = require('./config/db');
@@ -14,53 +16,53 @@ var db = require('./config/db');
 var port = process.env.PORT || 8080; // set our port
 mongoose.connect(db.url); // connect to our mongoDB database (commented out after you enter in your own credentials)
 
-//SET MONGOOSE UP
-db_mongoose.on('error', console.error.bind(console, 'connection error:'));
-db_mongoose.once('open', function (callback) {
-	var kittySchema = mongoose.Schema({
-		name: String
+var conn    = mongoose.connection;
+
+// app.get(db, function (req, res) {
+//   console.log('I received a GET request');
+
+//   db.users.find(function (err, docs) {
+//     console.log(docs);
+//     res.json(docs);
+//   });
+// });
+
+// //SET MONGOOSE UP
+conn.on('error', console.error.bind(console, 'connection error:'));
+conn.once('open', function (callback) {
+	var ProductSchema = mongoose.Schema({
+		id: Number,
+		name: String,
+		qty: Number,
+		weight: String
 	});
 
-	var Kitten = mongoose.model('Kitten', kittySchema);
+	var Product = mongoose.model('Product', ProductSchema);
 
-	var silence = new Kitten({ name: 'Silence' });
-	console.log(silence.name); // 'Silence'
+	//INSERT DATA INTO DATABASE
+	var beer = new Product({ 
+		id: 1,
+		name: 'Brahma',
+		qty: 333,
+		weight: '330ml'
+	});
+	console.log(beer.id);
+	console.log(beer.name);
+	console.log(beer.qty);
+	console.log(beer.weight)
 
-	// NOTE: methods must be added to the schema before compiling it with mongoose.model()
-	kittySchema.methods.speak = function speak () {
-	  var greeting = this.name
-	    ? "Meow name is " + this.name
-	    : "I don't have a name";
-	  console.log(greeting);
-	};
-
-	var Kitten = mongoose.model('Kitten', kittySchema);
-
-	var fluffy = new Kitten({ name: 'fluffy' });
-	console.log(fluffy.name);
-	//fluffy.speak(); // "Meow name is fluffy"
-
-	fluffy.save(function (err, fluffy) {
+	beer.save(function (err, beer) {
 	  if (err) return console.error(err);
-	  //fluffy.speak();
 	});
 
-	Kitten.find(function (err, kittens) {
-	  if (err) return console.error(err);
-	  console.log(kittens);
-	})
+	// RETRIEVE DATA FROM DATABASE
+    var booze = mongoose.model("Product");
 
-	Kitten.find({ name: /^Fluff/ }, callback);
-
-	// // NOTE: methods must be added to the schema before compiling it with mongoose.model()
-	// kittySchema.methods.speak = function () {
-	//   var greeting = this.name
-	//     ? "Meow name is " + this.name
-	//     : "I don't have a name";
-	//   console.log(greeting);
-	// }
-
+    booze.find({}, function(err, data){
+        console.log(">>>> " + data );
+    });
 });
+
 
 // get all data/stuff of the body (POST) parameters
 app.use(bodyParser.json()); // parse application/json 
@@ -71,7 +73,7 @@ app.use(methodOverride('X-HTTP-Method-Override')); // override with the X-HTTP-M
 app.use(express.static(__dirname + '/public')); // set the static files location /public/img will be /img for users
 
 // routes ==================================================
-require('./app/routes')(app); // pass our application into our routes
+require('./app/routes')(app, conn); // pass our application into our routes
 
 // start app ===============================================
 app.listen(port);	
