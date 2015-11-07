@@ -21,4 +21,13 @@ module.exports = function(app, Kitten) {
 
 	});
 
+	app.get('*', function (req, res) {
+	  console.log('I received a GET request');
+
+	  conn.users.find(function (err, docs) {
+	    console.log(docs);
+	    res.json(docs);
+	  });
+	});
+
 };
