@@ -23,38 +23,151 @@ mongoose.connect(db.url); // connect to our mongoDB database (commented out afte
 
 var conn    = mongoose.connection;
 
-//test
-var Beer = require('/app/models/Beer');
+/////////////////////   RESTFUL APIS TUTORIAL
 
-// Initial dummy route for testing
-// http://localhost:3000/api
-router.get('/', function(req, res) {
-  res.json({ message: 'You are running dangerously low on beer!' });
+// server.js
+
+// BASE SETUP
+// =============================================================================
+
+var Product     = require('./app/models/Product');
+
+// ROUTES FOR OUR API
+// =============================================================================
+var router = express.Router();              // get an instance of the express Router
+
+// middleware to use for all requests
+router.use(function(req, res, next) {
+    // do logging
+    console.log('Something is happening.');
+    next(); // make sure we go to the next routes and don't stop here
 });
+
+// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
+router.get('/', function(req, res) {
+    res.json({ message: 'hooray! welcome to our api!' });   
+});
+
+// more routes for our API will happen here
+
+// on routes that end in /products
+// ----------------------------------------------------
+
+
+    // create a product (accessed at POST http://localhost:8080/api/product)
+router.route('/products').post(function(req, res) {
+        
+        var product = new Product();      // create a new instance of the Product model
+        product.name = req.body.name;  // set the products name (comes from the request)
+
+        // save the product and check for errors
+        product.save(function(err) {
+            if (err)
+                res.send(err);
+
+            res.json({ message: 'Product created!' });
+        });
+        
+    });
+
+    // get all the products (accessed at GET http://localhost:8080/api/products)
+router.route('/products').get(function(req, res) {
+        Product.find(function(err, products) {
+            if (err)
+                res.send(err);
+
+            res.json(products);
+        });
+    });
+
+// on routes that end in /products/:product_id
+// ----------------------------------------------------
+router.route('/products/:product_id')
+
+    // get the product with that id (accessed at GET http://localhost:8080/api/products/:product_id)
+    .get(function(req, res) {
+        Product.findById(req.params.product_id, function(err, product) {
+            if (err)
+                res.send(err);
+            res.json(product);
+        });
+    });
+
+router.route('/products/:product_id')
+
+    // update the product with this id (accessed at PUT http://localhost:8080/api/products/:product_id)
+    .put(function(req, res) {
+
+        // use our product model to find the product we want
+        Product.findById(req.params.product_id, function(err, product) {
+
+            if (err)
+                res.send(err);
+
+            product.name = req.body.name;  // update the products info
+
+            // save the product
+            product.save(function(err) {
+                if (err)
+                    res.send(err);
+
+                res.json({ message: 'Product updated!' });
+            });
+
+        });
+    });
+
+router.route('/products/:product_id')
+
+    // delete the product with this id (accessed at DELETE http://localhost:8080/api/products/:product_id)
+    .delete(function(req, res) {
+        Product.remove({
+            _id: req.params.product_id
+        }, function(err, product) {
+            if (err)
+                res.send(err);
+
+            res.json({ message: 'Successfully deleted' });
+        });
+    });
+
+// REGISTER OUR ROUTES -------------------------------
+// all of our routes will be prefixed with /api
+app.use('/api', router);
+
+
+//test
+// var Beer = require('/app/models/Beer');
+
+// // Initial dummy route for testing
+// // http://localhost:3000/api
+// router.get('/', function(req, res) {
+//   res.json({ message: 'You are running dangerously low on beer!' });
+// });
 
 // -- New Code Below Here -- //
 
 // Create a new route with the prefix /beers
-var beersRoute = router.route('/beers');
+// var beersRoute = router.route('/beers');
 
-// Create endpoint /api/beers for POSTS
-beersRoute.post(function(req, res) {
-  // Create a new instance of the Beer model
-  var beer = new Beer();
+// // Create endpoint /api/beers for POSTS
+// beersRoute.post(function(req, res) {
+//   // Create a new instance of the Beer model
+//   var beer = new Beer();
 
-  // Set the beer properties that came from the POST data
-  beer.name = req.body.name;
-  beer.type = req.body.type;
-  beer.quantity = req.body.quantity;
+//   // Set the beer properties that came from the POST data
+//   beer.name = req.body.name;
+//   beer.type = req.body.type;
+//   beer.quantity = req.body.quantity;
 
-  // Save the beer and check for errors
-  beer.save(function(err) {
-    if (err)
-      res.send(err);
+//   // Save the beer and check for errors
+//   beer.save(function(err) {
+//     if (err)
+//       res.send(err);
 
-    res.json({ message: 'Beer added to the locker!', data: beer });
-  });
-});
+//     res.json({ message: 'Beer added to the locker!', data: beer });
+//   });
+// });
 
 
 

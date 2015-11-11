@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 module.exports = mongoose.model('Product', {
 	id : {type: Number, default: ''},
 	name : {type : String, default: ''},
+	brand : {type : String, default: ''},
 	qty : {type: Number, default: ''},
 	weight : {type: String, default: ''}
 });
