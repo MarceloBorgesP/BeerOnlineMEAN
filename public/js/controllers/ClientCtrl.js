@@ -2,7 +2,7 @@ var app = angular.module('ClientCtrl').controller('ClientController', function($
 
 });
 
-app.controller('ClientController', ['$scope', '$http', function($scope, $http) {
+app.controller('ClientController', ['$scope', '$http', 'ClientService', function($scope, $http, ClientService) {
     console.log("Hello World from controller");
     var init = function () {
 		showList();

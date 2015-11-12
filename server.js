@@ -16,12 +16,12 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 	
 // config files
- // var db = require('./config/db');
+var db = require('./config/db');
 
 var port = process.env.PORT || 8080; // set our port
-// mongoose.connect(db.url); // connect to our mongoDB database (commented out after you enter in your own credentials)
+mongoose.connect(db.url); // connect to our mongoDB database (commented out after you enter in your own credentials)
 
-// var conn    = mongoose.connection;
+var conn    = mongoose.connection;
 
 /////////////////////   RESTFUL APIS TUTORIAL
 
@@ -30,110 +30,110 @@ var port = process.env.PORT || 8080; // set our port
 // BASE SETUP
 // =============================================================================
 
-// var Product     = require('./app/models/Product');
+var Product     = require('./app/models/Product');
 
-// // ROUTES FOR OUR API
-// // =============================================================================
-// var router = express.Router();              // get an instance of the express Router
+// ROUTES FOR OUR API
+// =============================================================================
+var router = express.Router();              // get an instance of the express Router
 
-// // middleware to use for all requests
-// router.use(function(req, res, next) {
-//     // do logging
-//     console.log('Something is happening.');
-//     next(); // make sure we go to the next routes and don't stop here
-// });
+// middleware to use for all requests
+router.use(function(req, res, next) {
+    // do logging
+    console.log('Something is happening.');
+    next(); // make sure we go to the next routes and don't stop here
+});
 
-// // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-// router.get('/', function(req, res) {
-//     res.json({ message: 'hooray! welcome to our api!' });   
-// });
+// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
+router.get('/', function(req, res) {
+    res.json({ message: 'hooray! welcome to our api!' });   
+});
 
-// // more routes for our API will happen here
+// more routes for our API will happen here
 
-// // on routes that end in /products
-// // ----------------------------------------------------
+// on routes that end in /products
+// ----------------------------------------------------
 
 
-//     // create a product (accessed at POST http://localhost:8080/api/product)
-// router.route('/products').post(function(req, res) {
+    // create a product (accessed at POST http://localhost:8080/api/product)
+router.route('/products').post(function(req, res) {
         
-//         var product = new Product();      // create a new instance of the Product model
-//         product.name = req.body.name;  // set the products name (comes from the request)
+        var product = new Product();      // create a new instance of the Product model
+        product.name = req.body.name;  // set the products name (comes from the request)
 
-//         // save the product and check for errors
-//         product.save(function(err) {
-//             if (err)
-//                 res.send(err);
+        // save the product and check for errors
+        product.save(function(err) {
+            if (err)
+                res.send(err);
 
-//             res.json({ message: 'Product created!' });
-//         });
+            res.json({ message: 'Product created!' });
+        });
         
-//     });
+    });
 
-//     // get all the products (accessed at GET http://localhost:8080/api/products)
-// router.route('/products').get(function(req, res) {
-//         Product.find(function(err, products) {
-//             if (err)
-//                 res.send(err);
+    // get all the products (accessed at GET http://localhost:8080/api/products)
+router.route('/products').get(function(req, res) {
+        Product.find(function(err, products) {
+            if (err)
+                res.send(err);
 
-//             res.json(products);
-//         });
-//     });
+            res.json(products);
+        });
+    });
 
-// // on routes that end in /products/:product_id
-// // ----------------------------------------------------
-// router.route('/products/:product_id')
+// on routes that end in /products/:product_id
+// ----------------------------------------------------
+router.route('/products/:product_id')
 
-//     // get the product with that id (accessed at GET http://localhost:8080/api/products/:product_id)
-//     .get(function(req, res) {
-//         Product.findById(req.params.product_id, function(err, product) {
-//             if (err)
-//                 res.send(err);
-//             res.json(product);
-//         });
-//     });
+    // get the product with that id (accessed at GET http://localhost:8080/api/products/:product_id)
+    .get(function(req, res) {
+        Product.findById(req.params.product_id, function(err, product) {
+            if (err)
+                res.send(err);
+            res.json(product);
+        });
+    });
 
-// router.route('/products/:product_id')
+router.route('/products/:product_id')
 
-//     // update the product with this id (accessed at PUT http://localhost:8080/api/products/:product_id)
-//     .put(function(req, res) {
+    // update the product with this id (accessed at PUT http://localhost:8080/api/products/:product_id)
+    .put(function(req, res) {
 
-//         // use our product model to find the product we want
-//         Product.findById(req.params.product_id, function(err, product) {
+        // use our product model to find the product we want
+        Product.findById(req.params.product_id, function(err, product) {
 
-//             if (err)
-//                 res.send(err);
+            if (err)
+                res.send(err);
 
-//             product.name = req.body.name;  // update the products info
+            product.name = req.body.name;  // update the products info
 
-//             // save the product
-//             product.save(function(err) {
-//                 if (err)
-//                     res.send(err);
+            // save the product
+            product.save(function(err) {
+                if (err)
+                    res.send(err);
 
-//                 res.json({ message: 'Product updated!' });
-//             });
+                res.json({ message: 'Product updated!' });
+            });
 
-//         });
-//     });
+        });
+    });
 
-// router.route('/products/:product_id')
+router.route('/products/:product_id')
 
-//     // delete the product with this id (accessed at DELETE http://localhost:8080/api/products/:product_id)
-//     .delete(function(req, res) {
-//         Product.remove({
-//             _id: req.params.product_id
-//         }, function(err, product) {
-//             if (err)
-//                 res.send(err);
+    // delete the product with this id (accessed at DELETE http://localhost:8080/api/products/:product_id)
+    .delete(function(req, res) {
+        Product.remove({
+            _id: req.params.product_id
+        }, function(err, product) {
+            if (err)
+                res.send(err);
 
-//             res.json({ message: 'Successfully deleted' });
-//         });
-//     });
+            res.json({ message: 'Successfully deleted' });
+        });
+    });
 
-// // REGISTER OUR ROUTES -------------------------------
-// // all of our routes will be prefixed with /api
-// app.use('/api', router);
+// REGISTER OUR ROUTES -------------------------------
+// all of our routes will be prefixed with /api
+app.use('/api', router);
 
 
 // //test
@@ -222,7 +222,7 @@ var port = process.env.PORT || 8080; // set our port
 // app.use(express.static(__dirname + '/public')); // set the static files location /public/img will be /img for users
 
 // // routes ==================================================
-// require('./app/routes')(app, conn); // pass our application into our routes
+require('./app/routes')(app); // pass our application into our routes
 
 // start app ===============================================
 app.listen(port);	

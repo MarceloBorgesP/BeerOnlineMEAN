@@ -1,1 +1,1 @@
-angular.module('app', ['ngRoute', 'appRoutes', 'MainCtrl', 'ClientCtrl', 'ClientService', 'HistoryCtrl', 'HistoryService']);
+angular.module('app', ['ngRoute', 'appRoutes', 'MainCtrl', 'NerdCtrl', 'NerdService', 'GeekCtrl', 'GeekService']); 		
