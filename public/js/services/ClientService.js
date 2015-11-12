@@ -2,8 +2,8 @@ var app = angular.module('ClientService', []).factory('Client', ['$http', functi
 
 }]);
 
-app.controller('ClientService', ['$scope', '$http', function($scope, $http) {
-	var getList = function() {
-	    console.log("Hello World from service");
-	}
-}]);
+// app.controller('ClientService', ['$scope', '$http', function($scope, $http) {
+// 	var getList = function() {
+// 	    console.log("Hello World from service");
+// 	}
+// }]);
