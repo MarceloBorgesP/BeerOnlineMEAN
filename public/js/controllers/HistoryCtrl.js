@@ -1,3 +1,3 @@
-angular.module('historyCtrl', []).controller('historyController', function($scope) {
+angular.module('HistoryCtrl', []).controller('HistoryController', function($scope) {
 
 });

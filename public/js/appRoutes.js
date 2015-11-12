@@ -5,17 +5,17 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
 		// home page
 		.when('/inventory', {
 			templateUrl: 'views/inventory.html',
-			controller: 'MainController'
+			controller: 'ProductController'
 		})
 
 		.when('/clients', {
 			templateUrl: 'views/clients.html',
-			controller: 'NerdController'
+			controller: 'ClientController'
 		})
 
 		.when('/history', {
 			templateUrl: 'views/history.html',
-			controller: 'GeekController'	
+			controller: 'HistoryController'	
 		});
 
 	$locationProvider.html5Mode(true);
