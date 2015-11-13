@@ -1,4 +1,4 @@
-var app = angular.module('ClientService', []).factory('Client', ['$http', function($http) {
+app.factory('Client', ['$http', '$resource', function($http, $resource) {
 
 }]);
 

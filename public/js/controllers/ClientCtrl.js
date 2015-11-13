@@ -1,8 +1,4 @@
-var app = angular.module('ClientCtrl', []).controller('ClientController', function($scope) {
-
-});
-
-app.controller('ClientController', ['$scope', '$http', function($scope, $http) {
+app.controller('ClientController', ['$scope', '$http', 'Client', function($scope, $http, Client) {
     console.log("Hello World from controller");
     var init = function () {
 		showList();
@@ -10,8 +6,8 @@ app.controller('ClientController', ['$scope', '$http', function($scope, $http) {
 	
 	var showList = function () {
 		console.log("Showing list");
-		// ClientService.getList(function() {
-		// });
+		ClientService.getList(function() {
+		});
 	};
     init();
 }]);
