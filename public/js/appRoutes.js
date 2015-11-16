@@ -1,21 +1,26 @@
-angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+var app = angular.module('appRoutes', ['ngResource']).config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 
 	$routeProvider
-
 		// home page
 		.when('/inventory', {
 			templateUrl: 'views/inventory.html',
-			controller: 'MainController'
+			controller: 'InventoryController'
+		})
+
+		.when('/inventory/products/:id*', {
+			templateUrl: 'views/update-product.html',
+			controller: 'UpdateInventoryController'
+			// resolve: {id: function() { return 1; }}
 		})
 
 		.when('/clients', {
 			templateUrl: 'views/clients.html',
-			controller: 'NerdController'
+			controller: 'ClientController'
 		})
 
 		.when('/history', {
 			templateUrl: 'views/history.html',
-			controller: 'GeekController'	
+			controller: 'HistoryController'	
 		});
 
 	$locationProvider.html5Mode(true);
